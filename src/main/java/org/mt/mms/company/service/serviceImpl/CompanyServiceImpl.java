@@ -6,7 +6,6 @@ import org.mt.mms.company.mapper.CompanyMapper;
 import org.mt.mms.company.service.CompanyService;
 import org.mt.mms.company.vo.CompanyManagerVO;
 import org.mt.mms.company.vo.CompanyVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,22 +32,17 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void newCompany(CompanyVO companyVO) throws Exception {
-        log.info(companyVO.getCompanyId());
+    public int newCompany(CompanyVO companyVO) throws Exception {
         if(companyVO.getCompanyId() == null || companyVO.getCompanyId().isEmpty()){
-            if(companyMapper.insertCompany(companyVO) < 0){
-                throw new Exception("저장실패");
-            }
+            return companyMapper.insertCompany(companyVO);
         } else {
-            if(companyMapper.updateCompany(companyVO) < 0){
-                throw new Exception("저장실패");
-            }
+            return companyMapper.updateCompany(companyVO);
         }
 
     }
 
     @Override
-    public void deleteCompany(String id) throws Exception {
+    public int deleteCompany(String id) throws Exception {
         /* a. company_manager 조회 후 삭제 */
         List<CompanyManagerVO> cmList = companyMapper.selectCompanyManagers(id);
         if(!cmList.isEmpty()) { // a-1.company_manager 존재시 company_id 로 전체삭제처리
@@ -58,29 +52,21 @@ public class CompanyServiceImpl implements CompanyService {
         }
 
         /* b. company 삭제 */
-        if(companyMapper.deleteCompany(id) < 0) {
-            throw new Exception("저장실패");
-        }
+        return companyMapper.deleteCompany(id);
     }
 
     @Override
-    public void newCompanyManager(CompanyManagerVO companyManagerVO) throws Exception {
+    public int newCompanyManager(CompanyManagerVO companyManagerVO) throws Exception {
         if(companyManagerVO.getCompanyManagerId() == null) {
-            if(companyMapper.insertCompanyManager(companyManagerVO) < 0) {
-                throw new Exception("저장실패");
-            }
+            return companyMapper.insertCompanyManager(companyManagerVO);
         } else {
-            if(companyMapper.updateCompanyManager(companyManagerVO) < 0) {
-                throw new Exception("저장실패");
-            }
+            return companyMapper.updateCompanyManager(companyManagerVO);
         }
     }
 
     @Override
-    public void deleteCompanyManager(String id) throws Exception {
-        if(companyMapper.deleteCompanyManager(id) < 0) {
-            throw new Exception("저장실패");
-        }
+    public int deleteCompanyManager(String id) throws Exception {
+        return companyMapper.deleteCompanyManager(id);
     }
 
 }

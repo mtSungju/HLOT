@@ -29,7 +29,7 @@ public class ProjectController {
     public ResponseEntity<Result> all() throws Exception{
 
      log.info("selectProjectList");
-
+    log.info("test");
      /* 프로젝트 리스트 조회*/
      return ResponseEntity.ok()
              .body(Result.resSuccess(projectService.all()));

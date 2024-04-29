@@ -13,11 +13,11 @@ public interface CompanyService {
 
     List<CompanyVO> all() throws Exception;
 
-    void newCompany(CompanyVO companyVO) throws Exception;
+    int newCompany(CompanyVO companyVO) throws Exception;
 
-    void deleteCompany(String id) throws Exception;
+    int deleteCompany(String id) throws Exception;
 
-    void newCompanyManager(CompanyManagerVO companyManagerVO) throws Exception;
+    int newCompanyManager(CompanyManagerVO companyManagerVO) throws Exception;
 
-    void deleteCompanyManager(String id) throws Exception;
+    int deleteCompanyManager(String id) throws Exception;
 }
