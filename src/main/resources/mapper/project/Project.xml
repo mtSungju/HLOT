@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mt.mms.project.mapper.ProjectMapper">
+    <select id="getProjects" resultType="org.mt.mms.project.vo.ProjectVO">
+        <!--        -->
+        SELECT
+            PROJECT_ID,
+            PROJECT_NAME,
+            DATE_FORMAT(PROJECT_ST_DATE, '%Y-%m-%d') AS PROJECT_ST_DATE ,
+            DATE_FORMAT(PROJECT_END_DATE, '%Y-%m-%d') AS PROJECT_END_DATE ,
+            PROJECT_STATUS,
+            CUSTOMER,
+            REMARK,
+            REGIST_USER_NAME,
+            REGIST_DATE
+        FROM
+        PROJECT
+        WHERE DEL_YN = 'N'
+        ORDER BY REGIST_DATE DESC
+    </select>
+
+    <insert id="newProject" parameterType="org.mt.mms.project.vo.ProjectVO">
+        INSERT INTO PROJECT
+        (
+            PROJECT_ID,
+            PROJECT_NAME,
+            PROJECT_ST_DATE,
+            PROJECT_END_DATE,
+            PROJECT_STATUS,
+            CUSTOMER,
+            REMARK,
+            REGIST_USER_NAME,
+            REGIST_DATE
+        )
+        VALUES
+        (
+            CONCAT('HLOTP',NEXTVAL(HLOT_SEQ)),
+            #{projectName},
+            #{projectStDate},
+            #{projectEndDate},
+            #{projectStatus},
+            #{customer},
+            #{remark},
+            '최성주',
+            sysdate()
+        )
+    </insert>
+
+    <select id="one" resultType="org.mt.mms.project.vo.ProjectVO" parameterType="string">
+        SELECT
+            PROJECT_ID,
+            PROJECT_NAME,
+            PROJECT_ST_DATE,
+            PROJECT_END_DATE,
+            PROJECT_STATUS,
+            CUSTOMER,
+            REMARK,
+            REGIST_USER_NAME,
+            REGIST_DATE
+        FROM
+            PROJECT
+        WHERE PROJECT_ID  = #{projectId}
+    </select>
+
+    <update id="updateProject" parameterType="org.mt.mms.project.vo.ProjectVO">
+        UPDATE PROJECT
+        SET
+        PROJECT_NAME 		= #{projectName},
+        PROJECT_ST_DATE 	= #{projectStDate},
+        PROJECT_END_DATE	= #{projectEndDate},
+        PROJECT_STATUS 		= #{projectStatus},
+        CUSTOMER 			= #{customer},
+        REMARK 				= #{remark},
+        MODIFY_DATE = SYSDATE(),
+        MODIFY_USER_NAME = '최성주'
+        WHERE
+        PROJECT_ID = #{projectId}
+    </update>
+
+    <update id="deleteProject" parameterType="java.util.ArrayList">
+
+            UPDATE PROJECT SET
+            DEL_YN = 'Y'
+            WHERE
+            PROJECT_ID IN
+        <foreach collection="deldata" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

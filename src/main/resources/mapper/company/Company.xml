@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mt.mms.company.mapper.CompanyMapper">
+
+    <select id="selectCompany" resultType="org.mt.mms.company.vo.CompanyVO" parameterType="string">
+        SELECT /* org.mt.mms.company.mapper.CompanyMapper.getCompany : COMPANY 상세조회 */
+            COMPANY_ID
+             , COMPANY_NAME
+             , BUSINESS_REGIST_NUMB
+             , COMPANY_TEL
+             , REMARK
+             , REGIST_USER_NAME
+             , REGIST_DATE
+        FROM COMPANY
+        WHERE COMPANY_ID = #{companyId}
+    </select>
+
+    <select id="selectCompanys" resultType="org.mt.mms.company.vo.CompanyVO">
+        SELECT /* org.mt.mms.company.mapper.CompanyMapper.selectCompanys : COMPANY 목록조회 */
+            COMPANY_ID
+             , COMPANY_NAME
+             , BUSINESS_REGIST_NUMB
+             , COMPANY_TEL
+             , REMARK
+             , REGIST_USER_NAME
+             , REGIST_DATE
+        FROM COMPANY
+        WHERE DEL_YN = 'N'
+        ORDER BY REGIST_DATE DESC
+    </select>
+
+
+    <insert id="insertCompany" parameterType="org.mt.mms.company.vo.CompanyVO">
+        INSERT INTO COMPANY /* org.mt.mms.company.mapper.CompanyMapper.insertCompany : COMPANY 저장 */
+        (
+             COMPANY_ID
+            , COMPANY_NAME
+            , BUSINESS_REGIST_NUMB
+            , COMPANY_TEL
+            , REMARK
+            , REGIST_USER_NAME
+        )
+        VALUES(
+            CONCAT('HLOTC',NEXTVAL(HLOT_SEQ)),
+            #{companyName},
+            #{businessRegistNumb},
+            #{companyTel},
+            #{remark},
+            #{registUserName}
+        )
+    </insert>
+
+    <update id="updateCompany" parameterType="org.mt.mms.company.vo.CompanyVO">
+        UPDATE COMPANY /* org.mt.mms.company.mapper.CompanyMapper.updateCompany : COMPANY 수정 */
+        SET
+            COMPANY_NAME = #{companyName}
+            , BUSINESS_REGIST_NUMB = #{businessRegistNumb}
+            , COMPANY_TEL = #{companyTel}
+            , REMARK = #{remark}
+            , MODIFY_DATE = sysdate()
+            , MODIFY_USER_NAME = #{registUserName}
+        WHERE COMPANY_ID = #{companyId}
+    </update>
+
+    <update id="deleteCompany" parameterType="string">
+        UPDATE COMPANY /* org.mt.mms.company.mapper.CompanyMapper.deleteCompany : COMPANY 삭제 */
+        SET
+            DEL_YN = 'Y'
+            , MODIFY_USER_NAME = #{registUserName}
+            , MODIFY_DATE = sysdate()
+        WHERE COMPANY_ID = #{id}
+    </update>
+
+    <select id="selectCompanyManagers" resultType="org.mt.mms.company.vo.CompanyManagerVO" parameterType="string">
+        SELECT /* org.mt.mms.company.mapper.CompanyMapper.selectCompanyManagers : COMPANY_MANAGER 목록조회 */
+            COMPANY_MANAGER_ID
+             , COMPANY_ID
+             , COMPANY_MANAGER_NAME
+             , COMPANY_MANAGER_TEL
+             , REMARK
+             , REGIST_USER_NAME
+             , REGIST_DATE
+             , DEL_YN
+        FROM COMPANY_MANAGER
+        WHERE COMPANY_ID = #{companyId}
+            AND DEL_YN = 'N'
+        ORDER BY REGIST_DATE DESC
+    </select>
+
+    <insert id="insertCompanyManager" parameterType="org.mt.mms.company.vo.CompanyManagerVO">
+        INSERT INTO COMPANY_MANAGER /* org.mt.mms.company.mapper.CompanyMapper.insertCompanyManager : COMPANY_MANAGER 저장 */
+        (
+         COMPANY_MANAGER_ID
+        , COMPANY_ID
+        , COMPANY_MANAGER_NAME
+        , COMPANY_MANAGER_TEL
+        , REMARK
+        , REGIST_USER_NAME
+        )
+        VALUES(
+            CONCAT('HLOTM',NEXTVAL(HLOT_SEQ))
+            , #{companyId}
+            , #{companyManagerName}
+            , #{companyManagerTel}
+            , #{remark}
+            , #{registUserName}
+        )
+    </insert>
+
+    <update id="updateCompanyManager" parameterType="org.mt.mms.company.vo.CompanyManagerVO">
+        UPDATE COMPANY_MANAGER /* org.mt.mms.company.mapper.CompanyMapper.updateCompanyManager : COMPANY_MANAGER 수정 */
+        SET
+            COMPANY_MANAGER_NAME = #{companyManagerName}
+            , COMPANY_MANAGER_TEL = #{companyManagerTel}
+            , REMARK = #{remark}
+            , MODIFY_DATE = sysdate()
+            , MODIFY_USER_NAME = #{registUserName}
+        WHERE COMPANY_ID = #{companyId}
+            AND COMPANY_MANAGER_ID = #{companyManagerId}
+    </update>
+
+    <update id="deleteCompanyManager" parameterType="string">
+        UPDATE COMPANY_MANAGER /* org.mt.mms.company.mapper.CompanyManager.deleteCompanyManager : COMPANY_MANAGER 삭제 */
+        SET DEL_YN = 'Y'
+          , MODIFY_DATE = sysdate()
+          , MODIFY_USER_NAME = #{registUserName}
+        WHERE COMPANY_MANAGER_ID = #{id}
+    </update>
+
+    <update id="deleteCompanyManagerAll" parameterType="string">
+        UPDATE COMPANY_MANAGER /* org.mt.mms.company.mapper.CompanyMapper.deleteCompanyAll : COMPANY 전체 삭제 */
+        SET
+            DEL_YN = 'Y'
+          , MODIFY_USER_NAME = #{registUserName}
+          , MODIFY_DATE = sysdate()
+        WHERE COMPANY_ID = #{id}
+    </update>
+</mapper>
